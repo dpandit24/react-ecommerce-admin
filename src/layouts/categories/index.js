@@ -65,11 +65,11 @@ function Categories() {
 
     const toggleDialog = () => {
         setOpen(!open);
-        // if(!open){
-        //     setCategoryData({name: "",image: ""})
-        //     // setIsEdit(false)
-        //     setSelectedCategoryId(null)
-        // }
+        if(!open){
+            setCategoryData({name: "",image: ""})
+            setIsEdit(false)
+            setSelectedCategoryId(null)
+        }
     };
 
     const handleInputChange = (e) => {
@@ -87,19 +87,11 @@ function Categories() {
     };
 
     const handleEdit = (category) => {
-        console.log("before",isEdit);       
-        setCategoryData({name : category.name, image: category.image})
-        setSelectedCategoryId(category.id)
-        setIsEdit(true)
-        // toggleDialog()
-        console.log("after",isEdit);
-        
-        setTimeout(() => {
-            toggleDialog();
-        }, 1); 
-        // setIsEdit(false)
-
-    }
+        setCategoryData({ name: category.name, image: category.image });
+        setSelectedCategoryId(category.id);
+        setIsEdit(true);
+        setTimeout(() => toggleDialog(), 1); // Open dialog after state is updated
+      };
 
     return (
         <DashboardLayout>

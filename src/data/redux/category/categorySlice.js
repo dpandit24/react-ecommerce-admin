@@ -1,6 +1,6 @@
 // redux/slices/categorySlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { addDoc, collection, getDocs, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase"; // adjust the path accordingly
 
 export const fetchCategories = createAsyncThunk("categories/fetchCategories", async () => {
@@ -19,7 +19,6 @@ export const createCategory = createAsyncThunk("categories/createCategory", asyn
   const docRef = await addDoc(collection(db, "categories"), newCategory);
   return { id: docRef.id, ...newCategory } // returning the new category with the generated ID
 });
-
 export const editCategory = createAsyncThunk(
   "categories/editCategory",
   async ({ id, modifiedCategory }) => {
@@ -65,23 +64,22 @@ const categorySlice = createSlice({
         state.error = action.error.message;
       })
 
-      //edit category
+      // Edit category
       .addCase(editCategory.pending, (state) => {
-        state.loading = true
+        state.loading = true;
       })
-      .addCase(editCategory.fulfilled, (state,action) => {
-        state.loading = false
-        const {id, ...updatedCategory} = action.payload
-
-        const index = state.categories.findIndex((category) => category.id === id)
-        if(index !== -1){
-          state.categories[index] = {...state.categories[index], ...updatedCategory}
+      .addCase(editCategory.fulfilled, (state, action) => {
+        state.loading = false;
+        const { id, ...updatedCategory } = action.payload;
+        const index = state.categories.findIndex((category) => category.id === id);
+        if (index !== -1) {
+          state.categories[index] = { ...state.categories[index], ...updatedCategory };
         }
       })
-      .addCase(editCategory.rejected, (state,action) => {
-        state.loading = false
-        state.error = action.error.message
-      })
+      .addCase(editCategory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
   },
 });
 
